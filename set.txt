@@ -1,0 +1,49 @@
+<
+Forest
+Grove of the Burnwillows
+Mox Diamond
+Taiga
+Misty Rainforest
+Wooded Foothills
+Windswept Heath
+<
+Exploration
+Manabond
+Mox Diamond
+<
+Gamble
+Life from the Loam
+<
+Barbarian Ring
+Bojuka Bog
+Dark Depths
+Forest
+Ghost Quarter
+Glacial Chasm
+Grove of the Burnwillows
+Maze of Ith
+Riftstone Portal
+Rishadan Port
+Sheltered Thicket
+Taiga
+The Tabernacle at Pendrell Vale
+Thespian's Stage
+Tranquil Thicket
+Misty Rainforest
+Wasteland
+Wooded Foothills
+<
+Barbarian Ring
+Bojuka Bog
+Forest
+Ghost Quarter
+Grove of the Burnwillows
+Riftstone Portal
+Rishadan Port
+Sheltered Thicket
+Taiga
+Thespian's Stage
+Tranquil Thicket
+Misty Rainforest
+Wasteland
+Wooded Foothills
