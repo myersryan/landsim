@@ -2,6 +2,8 @@ import random
 
 numlist = []
 handsize = 7
+decksize=60
+minHandSize=5
 namelist = []
 data = open("input.txt","r")
 set= open("set.txt","r")
@@ -17,23 +19,31 @@ set5=[]
 listofhands=[]
 
 successcount=0
+successHandSize=[]
+looplist=[]
+max_randint = []
 
-mull=0
 
 with open('input.txt') as f:
     line_count = 0
     for line in f:
         line_count += 1
 
+#creates a list of all cards in the decklist (including sideboard)
 for i in range (0, line_count):
     line = data.readline()
-    if len(line) > 1:
+    if len(line) > 3:
         num, name = line.split(" ", 1)
         name = name[:(len(name)-1)]
         namelist.append(name)
         numlist.append(num)
         for j in range (0, int(num)):
             cardlist.append(name)
+    else:
+        #validating that there are 60 cards before the line break and the verifying the first and last cards in the list
+        print(len(cardlist))
+        print(cardlist[0])
+        print(cardlist[len(cardlist)-1])
 
 
 with open('set.txt') as f:
@@ -57,146 +67,94 @@ for i in range (0, line_count):
     if "<" in line:
         setcount = setcount + 1
 
-card = [0,0,0,0,0,0,0]
 
-for i in range (0,10000):
+for i in range (0,100000):
     ss1 = False
     ss2 = False
     ss3 = False
     ss4 = False
-    hand = []
-    landcount=0
     handsize = 7
+    loopcount = 0
 
-    for i in range (0, handsize):
-        card[i] = random.randint(1,60)
-
-
-#determine if we have already drawn the same cards
-    for i in range (0,handsize):
-        for j in range (0,handsize):
-            while (card[i] == card[j]) and (i!=j):
-                card[i] = random.randint(1,60)
-
-#convert the card to text and put it into our hand
-    for i in range (0,handsize):
-        hand.append(cardlist[card[i]])
-
-#check set rules, checks for untapped green source
-    for i in range (0,len(set1)):
-        for j in range (0,len(hand)):
-            if hand[j] == set1[i]:
-                ss1=True
-
-#checking to see if we have accel
-    for i in range (0,len(set2)):
-        for j in range (0,len(hand)):
-            if hand[j] == set2[i]:
-                #if our accel is mox diamond, check to see if we have a second land to pitch (any land)
-                if hand[j] == "Mox Diamond":
-                    for k in range (0,len(set4)):
-                        for l in range (0,len(hand)):
-                            if hand[l] == set4[k]:
-                                landcount = landcount + 1
-                    if landcount >1:
-                        ss2=True
-                else:
-                    #if our accel is manabond or exploration, see if we have a second mana producing land for loam
-                    for k in range (0,len(set5)):
-                        for l in range (0,len(hand)):
-                            if hand[l] == set5[k]:
-                                landcount = landcount + 1
-                    ss2=True
-
-#checking to see if we have action
-    for i in range (0,len(set3)):
-        for j in range (0,len(hand)):
-            if hand[j] == set3[i]:
-                ss3=True
-
-#ensure we have more then 1 land to play
-    if landcount == 0:
-        for i in range (0,len(set4)):
-            for j in range (0,len(hand)):
-                if hand[j] == set4[i]:
-                    landcount=landcount+1
-        if landcount > 1:
-            ss4=True
-    else: ss4=True
-
-#if all sets are met success
-    if (ss1 == True and ss2 == True and ss3 == True and ss4==True):
-        successcount = successcount + 1
-    else:
+    while (ss1 == False or ss2 == False or ss3 == False or ss4==False) and handsize >= minHandSize:
+        hand = []
+        card = [0, 0, 0, 0, 0, 0, 0]
         ss1 = False
         ss2 = False
         ss3 = False
         ss4 = False
-        hand = []
         landcount = 0
-        handsize=6
 
-        for i in range(0, handsize):
-            card[i] = random.randint(1, 60)
+        for i in range (0, handsize):
+            card[i] = random.randint(0,decksize)
 
-        # determine if we have already drawn the same cards
-        for i in range(0, handsize):
-            for j in range(0, handsize):
-                while (card[i] == card[j]) and (i != j):
-                    card[i] = random.randint(1, 60)
+        #determine if we have already drawn the same cards
+        for i in range (0,handsize):
+            for j in range (0,handsize):
+                while (card[i] == card[j]) and (i!=j):
+                    card[i] = random.randint(0,decksize)
 
-        # convert the card to text and put it into our hand
-        for i in range(0, handsize):
+        #convert the card to text and put it into our hand
+        for i in range (0,handsize):
             hand.append(cardlist[card[i]])
 
-        # check set rules, checks for untapped green source
-        for i in range(0, len(set1)):
-            for j in range(0, len(hand)):
+        #check set rules, checks for untapped green source
+        for i in range (0,len(set1)):
+            for j in range (0,len(hand)):
                 if hand[j] == set1[i]:
-                    ss1 = True
+                    ss1=True
 
-        # checking to see if we have accel
-        for i in range(0, len(set2)):
-            for j in range(0, len(hand)):
+        #checking to see if we have accel
+        for i in range (0,len(set2)):
+            for j in range (0,len(hand)):
                 if hand[j] == set2[i]:
-                    # if our accel is mox diamond, check to see if we have a second land to pitch (any land)
+                    #if our accel is mox diamond, check to see if we have a second land to pitch (any land)
                     if hand[j] == "Mox Diamond":
-                        for k in range(0, len(set4)):
-                            for l in range(0, len(hand)):
+                        landcount=0
+                        for k in range (0,len(set4)):
+                            for l in range (0,len(hand)):
                                 if hand[l] == set4[k]:
                                     landcount = landcount + 1
-                        if landcount > 1:
-                            ss2 = True
+                        if landcount >1:
+                            ss2=True
                     else:
-                        # if our accel is manabond or exploration, see if we have a second mana producing land for loam
-                        for k in range(0, len(set5)):
-                            for l in range(0, len(hand)):
+                        #if our accel is manabond or exploration, see if we have a second mana producing land for loam
+                        landcount = 0
+                        for k in range (0,len(set5)):
+                            for l in range (0,len(hand)):
                                 if hand[l] == set5[k]:
                                     landcount = landcount + 1
-                        ss2 = True
+                        if landcount > 1:
+                            ss2=True
 
-        # checking to see if we have action
-        for i in range(0, len(set3)):
-            for j in range(0, len(hand)):
+        #checking to see if we have action
+        for i in range (0,len(set3)):
+            for j in range (0,len(hand)):
                 if hand[j] == set3[i]:
-                    ss3 = True
+                    ss3=True
 
-        # ensure we have more then 1 land to play
+        #ensure we have more then 1 land to play
         if landcount == 0:
-            for i in range(0, len(set4)):
-                for j in range(0, len(hand)):
+            for i in range (0,len(set4)):
+                for j in range (0,len(hand)):
                     if hand[j] == set4[i]:
-                        landcount = landcount + 1
+                        landcount=landcount+1
             if landcount > 1:
-                ss4 = True
-        else:
-            ss4 = True
-        if (ss1 == True and ss2 == True and ss3 == True and ss4 == True):
+                ss4=True
+        else: ss4=True
+
+        #if all sets are met success
+        if (ss1 == True and ss2 == True and ss3 == True and ss4==True):
             successcount = successcount + 1
-            mull=mull+1
+            successHandSize.append(handsize)
+            looplist.append(loopcount)
+        else:
+            handsize=handsize-1
+            loopcount=loopcount+1
 
 
-print(successcount)
-print(mull)
 
+print("The minimum size of successful hands is:",min(successHandSize))
+print("Amount of mulligans to get the minimum hand size of successful hands is:",max(looplist))
+print("Amount of successful simulations:",successcount)
 
