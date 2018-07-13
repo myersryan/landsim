@@ -1,6 +1,6 @@
 import random
 
-def draw():
+def sim():
         decksize=60
         minHandSize=5
         successcount=0
@@ -20,26 +20,13 @@ def draw():
             loopcount = 0
 
             while (ss1 == False or ss2 == False or ss3 == False or ss4==False) and handsize >= minHandSize:
-                hand = []
-                card = [0, 0, 0, 0, 0, 0, 0]
                 ss1 = False
                 ss2 = False
                 ss3 = False
                 ss4 = False
                 landcount = 0
 
-                for i in range (0, handsize):
-                    card[i] = random.randint(0,decksize)
-
-                #determine if we have already drawn the same cards
-                for i in range (0,handsize):
-                    for j in range (0,handsize):
-                        while (card[i] == card[j]) and (i!=j):
-                            card[i] = random.randint(0,decksize)
-
-                #convert the card to text and put it into our hand
-                for i in range (0,handsize):
-                    hand.append(cardlist[card[i]])
+                hand=draw(handsize,decksize, cardlist)
 
                 #check set rules, checks for untapped green source
                 for i in range (0,len(set1)):
@@ -156,7 +143,25 @@ def setParse():
     return(set1,set2,set3,set4,set5)
 
 
+def draw(handsize, decksize, cardlist):
+    hand = []
+    card = [0, 0, 0, 0, 0, 0, 0]
+    for i in range(0, handsize):
+        card[i] = random.randint(0, decksize)
+
+    # determine if we have already drawn the same cards
+    for i in range(0, handsize):
+        for j in range(0, handsize):
+            while (card[i] == card[j]) and (i != j):
+                card[i] = random.randint(0, decksize)
+
+    # convert the card to text and put it into our hand
+    for i in range(0, handsize):
+        hand.append(cardlist[card[i]])
+
+    return(hand)
+
 def main():
-    draw()
+    sim()
 
 main()
